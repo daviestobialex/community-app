@@ -770,7 +770,7 @@
 	"label.button.runreport": "Lakaat an danevell da vont en-dro",
 	"label.button.createreport": "Krouiñ un danevell",
 	"label.button.parameters": "Arventennoù",
-	"label.button.exportcsv": "Ezporzhiañ CVS",
+	"label.button.exportcsv": "Ezporzhiañ CSV",
 	"label.button.export": "Ezporzhiañ",
 	"label.selectallowedparameter": "Diuzañ an arventenn aotreet",
 	"startDateSelect": "Deiziad kregiñ",
@@ -1206,6 +1206,7 @@
 	"label.anchor.manageroleandpermissions": "Merañ ar rolloù hag an aotreoù",
 	"label.anchor.configuration": "Kefluniadurioù",
 	"label.anchor.managemembers": "Merañ an izili",
+	"label.input.town_village": "Kêr / Kêriadenn",
 	"label.input.type": "Seurt",
 	"label.input.templatename": "Anv ar patrom",
 	"label.input.codename": "Anv ar c'hod",
@@ -1459,5 +1460,6 @@
 	"reportsall": "Danevelloù",
 	"endDate": "Deiziad echuiñ",
 	"startDate": "Deiziad kregiñ",
-	"label.input.selected": "Diuzet"
+	"label.input.selected": "Diuzet",
+	"label.input.wardvillage": "Kêriadenn"
 }
