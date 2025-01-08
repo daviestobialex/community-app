@@ -1,0 +1,71 @@
+#child gitlab-ci
+variables:
+  AWS_DEFAULT_REGION: us-east-2
+  SERVICE_NAME: prd-fxbud-mifos
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_REGISTRY: 862979977000.dkr.ecr.us-east-2.amazonaws.com
+  SERVICE_VERSION: latest
+  STATIC_VERSION: 0.0.1
+
+cache:
+  paths:
+    - mifos/
+
+stages:
+  - publish-master
+  - deploy-main
+     
+publish:
+    stage: publish-master
+    only:
+     - master
+     - merge_requests
+    image: 
+        name: amazon/aws-cli
+        entrypoint: [""]
+    services: 
+      - docker:dind
+    before_script:
+      - mkdir ~/.aws/
+      - cp config ~/.aws/credentials
+      - cat ~/.aws/credentials
+      - amazon-linux-extras install docker
+      - aws --version
+      - docker --version
+      - aws ecr get-login-password --profile prod --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $DOCKER_REGISTRY
+    script:
+#      - echo "IMAGE RE-TAGE ${CI_JOB_NAME} ${CI_PIPELINE_ID} ${CI_PIPELINE_IID} $MANIFEST"
+#      - aws ecr describe-images --repository-name $SERVICE_NAME
+#      - MANIFEST=$(aws ecr batch-get-image --repository-name $SERVICE_NAME --image-ids imageTag=$STATIC_VERSION --output text --query 'images[].imageManifest')
+#      - aws ecr put-image --repository-name $SERVICE_NAME --image-tag ${CI_PIPELINE_IID} --image-manifest "$MANIFEST"
+
+      - echo "Uploading $SERVICE_NAME To AWS Docker Registry $DOCKER_REGISTRY"
+      - cd mifos
+      - docker build -t $SERVICE_NAME:$CI_PIPELINE_IID . 
+      - docker tag $SERVICE_NAME:$CI_PIPELINE_IID $DOCKER_REGISTRY/$SERVICE_NAME:$SERVICE_VERSION
+      - docker push $DOCKER_REGISTRY/$SERVICE_NAME:$SERVICE_VERSION
+
+
+deploy:
+    stage: deploy-main
+    only:
+     - merge_requests
+    image: 
+        name: amazon/aws-cli
+        entrypoint: [""]
+    services: 
+      - docker:dind
+    before_script:
+      - mkdir ~/.aws/
+      - cp config ~/.aws/credentials
+      - cat ~/.aws/credentials
+      - amazon-linux-extras install docker
+      - aws --version
+      - docker --version
+      - aws ecr get-login-password --profile prod --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $DOCKER_REGISTRY
+    script:
+      - echo "Uploading $SERVICE_NAME To AWS Docker Registry $DOCKER_REGISTRY"
+      - cd mifos
+      - aws ecs update-service --cluster fxbud-prod-internal-cluster --service fxbud-prod-core-client-service-v2 --force-new-deployment --region $AWS_DEFAULT_REGION
