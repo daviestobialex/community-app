@@ -6,3 +6,5 @@ The docker file handle how the custom images are copied to the images folder for
 
 # FOR DEVELOPERS TO NOTE
 always push to Develop branch and then you can easily merge changes from the main community app project into this one
+
+when building use the `build-docker.sh` in the root folder to build the project
