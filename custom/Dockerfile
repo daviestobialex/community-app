@@ -2,7 +2,7 @@ FROM timbru31/ruby-node:2.7 as builder
 
 RUN apt-get update -qq && apt-get install -y wget && apt install -y git
 
-RUN git clone https://github.com/openMF/community-app.git; cd community-app ;
+RUN git clone git@github.com:daviestobialex/community-app.git;
 
 WORKDIR /community-app
 
